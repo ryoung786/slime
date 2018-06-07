@@ -53,14 +53,12 @@ class Slime extends Component {
     squares[0][6] = "green";
     squares[6][6] = "blue";
     squares[6][0] = "green";
-    console.log(squares);
 
     this.state = {
       squares: squares,
       active: null, // {x, y}
       player_turn: "blue"
     };
-    console.log(this.state.squares[1][1]);
   }
 
   countColors() {
