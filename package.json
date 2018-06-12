@@ -13,6 +13,6 @@
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject",
-    "deploy": "yarn build && rm -r ../ryoung786.github.io/slime && cp -r build ../ryoung786.github.io && mv ../ryoung786.github.io/build ../ryoung786.github.io/slime2"
+    "deploy": "yarn build && cp -r build ../ryoung786.github.io && pushd ../ryoung786.github.io && rm -r slime && mv build slime && git ci -a -m \"slime deploy\" && git push && popd"
   }
 }
