@@ -3,18 +3,22 @@ import "./Slime.css";
 
 function Square(props) {
   const color = props.value || "";
-  const clazz = "square " + color;
+  const active = props.active ? "active" : "";
+  const clazz = "square " + color + " " + active;
 
   return <div className={clazz} onClick={props.onClick} />;
 }
 
 class Board extends Component {
   renderSquare(i, j) {
+    const a = this.props.active;
+    const active = a && (a.x === i && a.y === j);
     return (
       <Square
         key={7 * i + j}
         value={this.props.squares[i][j]}
         onClick={() => this.props.onClick(i, j)}
+        active={active}
       />
     );
   }
@@ -87,13 +91,10 @@ class Slime extends Component {
   }
 
   handleClick(x, y) {
-    if (this.state.active) {
-      const did_move = this.move(x, y);
-      // if (did_move) {
-      //   this.countColors();
-      // }
-    } else if (this.state.squares[x][y] == this.state.player_turn) {
+    if (this.state.squares[x][y] == this.state.player_turn) {
       this.setState({ active: { x: x, y: y } });
+    } else if (this.state.active) {
+      this.move(x, y);
     }
   }
 
@@ -148,11 +149,11 @@ class Slime extends Component {
       squares[a.x][a.y] = null;
     }
     squares = this.flipAround(x, y, squares);
-    this.setState({
+    this.setState(prev => ({
       active: null,
       squares: squares,
-      player_turn: this.state.player_turn === "blue" ? "green" : "blue"
-    });
+      player_turn: prev.player_turn === "blue" ? "green" : "blue"
+    }));
     return true;
   }
 
