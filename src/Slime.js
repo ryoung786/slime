@@ -91,7 +91,7 @@ class Slime extends Component {
   }
 
   handleClick(x, y) {
-    if (this.state.squares[x][y] == this.state.player_turn) {
+    if (this.state.squares[x][y] === this.state.player_turn) {
       this.setState({ active: { x: x, y: y } });
     } else if (this.state.active) {
       this.move(x, y);
