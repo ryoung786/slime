@@ -103,7 +103,7 @@ class Slime extends Component {
     }
 
     // otherwise, the game is over and the other player has won
-    return this.state.player_turn === "blue" ? "green" : "blue";
+    return count.blue > count.green ? "blue" : "green";
   }
 
   handleClick(x, y) {
