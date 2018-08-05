@@ -1,13 +1,13 @@
 import React, { Component } from "react";
 import "./Slime.css";
 
-function Square(props) {
+const Square = props => {
   const color = props.value || "";
   const active = props.active ? "active" : "";
   const clazz = "square " + color + " " + active;
 
   return <div className={clazz} onClick={props.onClick} />;
-}
+};
 
 class Board extends Component {
   renderSquare(i, j) {
@@ -25,12 +25,10 @@ class Board extends Component {
 
   render() {
     return (
-      <div>
-        {this.props.squares.map((row, i) => (
-          <div className="row" key={i}>
-            {row.map((square, j) => this.renderSquare(i, j))}
-          </div>
-        ))}
+      <div className="board">
+        {this.props.squares.map((row, i) =>
+          row.map((_, j) => this.renderSquare(i, j))
+        )}
       </div>
     );
   }
@@ -76,18 +74,36 @@ class Slime extends Component {
     return count;
   }
 
+  emptySquares() {
+    let empties = [];
+    for (let i = 0; i < 7; i++) {
+      for (let j = 0; j < 7; j++) {
+        if (this.state.squares[i][j] === null) {
+          empties.push({ x: i, y: j });
+        }
+      }
+    }
+    return empties;
+  }
+
   isGameOver() {
     const count = this.countColors();
     // is one color out of squares?
-    if (!count["blue"] && count["green"] > 0) return "green";
-    if (!count["green"] && count["blue"] > 0) return "blue";
+    if (!count.blue && count.green > 0) return "green";
+    if (!count.green && count.blue > 0) return "blue";
     // is the board already full?  if so, player with the most squares wins
-    if (!count[null]) return count["blue"] > count["green"] ? "blue" : "green";
+    if (!count[null]) return count.blue > count.green ? "blue" : "green";
     // are there any valid moves for the active player?  if not, tally up
     // the count and declare a winner
+    for (let i = 0; i < 7; i++) {
+      for (let j = 0; j < 7; j++) {
+        if (this.state.squares[i][j] !== this.state.player_turn) continue;
+        if (this.hasValidMove(i, j)) return false;
+      }
+    }
 
-    // otherwise, the game is not over
-    return false;
+    // otherwise, the game is over and the other player has won
+    return this.state.player_turn === "blue" ? "green" : "blue";
   }
 
   handleClick(x, y) {
@@ -98,23 +114,17 @@ class Slime extends Component {
     }
   }
 
-  validMoves() {
-    const a = this.state.active;
-    if (!a) return [];
+  hasValidMove(x, y) {
+    for (let xd = -2; xd <= 2; xd++) {
+      for (let yd = -2; yd <= 2; yd++) {
+        let i = x + xd;
+        let j = y + yd;
+        if (i < 0 || i > 6) continue;
 
-    const delta = [].concat(
-      ...[-2, -1, 0, 1, 2].map(i =>
-        [-2, -1, 0, 1, 2].map(j => {
-          return { x: i, y: j };
-        })
-      )
-    );
-    return delta
-      .map(d => {
-        return { x: a.x + d.x, y: a.y + d.y };
-      })
-      .filter(sq => sq.x >= 0 && sq.x < 7 && sq.y >= 0 && sq.y < 7) // bounds check
-      .filter(sq => !(sq.x === a.x && sq.y === a.y)); // remove active square
+        if (this.state.squares[i][j] === null) return true;
+      }
+    }
+    return false;
   }
 
   isValidMove(x, y) {
