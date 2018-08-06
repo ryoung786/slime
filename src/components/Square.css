@@ -1,0 +1,17 @@
+.square {
+    border: 1px solid black;
+}
+.square.blue {
+    background-color: cornflowerblue;
+}
+.square.green {
+    background-color: limegreen;
+}
+
+.active {
+  animation: pulse 500ms infinite alternate;
+}
+@keyframes pulse {
+  0%   { filter: brightness(100%); }
+  100% { filter: brightness(120%); }
+}

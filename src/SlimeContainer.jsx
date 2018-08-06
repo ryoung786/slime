@@ -1,49 +1,7 @@
 import React, { Component } from "react";
-import "./Slime.css";
+import Slime from "./components/Slime";
 
-const Square = props => {
-  const color = props.value || "";
-  const active = props.active ? "active" : "";
-  const clazz = "square " + color + " " + active;
-
-  return <div className={clazz} onClick={props.onClick} />;
-};
-
-class Board extends Component {
-  renderSquare(i, j) {
-    const a = this.props.active;
-    const active = a && (a.x === i && a.y === j);
-    return (
-      <Square
-        key={7 * i + j}
-        value={this.props.squares[i][j]}
-        onClick={() => this.props.onClick(i, j)}
-        active={active}
-      />
-    );
-  }
-
-  render() {
-    return (
-      <div className="board">
-        {this.props.squares.map((row, i) =>
-          row.map((_, j) => this.renderSquare(i, j))
-        )}
-      </div>
-    );
-  }
-}
-
-const ColorCount = props => {
-  return (
-    <div>
-      <h2>Green: {props.count["green"] || 0}</h2>
-      <h2>Blue: {props.count["blue"] || 0}</h2>
-    </div>
-  );
-};
-
-class Slime extends Component {
+class SlimeContainer extends Component {
   constructor(props) {
     super(props);
 
@@ -63,17 +21,6 @@ class Slime extends Component {
     };
   }
 
-  countColors() {
-    const squares = this.state.squares;
-    let count = {};
-    squares.forEach((row, _) => {
-      row.forEach((entry, _) => {
-        count[entry] = count[entry] ? count[entry] + 1 : 1;
-      });
-    });
-    return count;
-  }
-
   emptySquares() {
     let empties = [];
     for (let i = 0; i < 7; i++) {
@@ -86,8 +33,16 @@ class Slime extends Component {
     return empties;
   }
 
-  isGameOver() {
-    const count = this.countColors();
+  countColors(squares) {
+    return [].concat(...squares).reduce((count, sq) => {
+      count[sq] = count[sq] ? count[sq] + 1 : 1;
+      return count;
+    }, {});
+  }
+
+  getWinner() {
+    const count = this.countColors(this.state.squares);
+    // const count = { blue: 5, green: 9, null: 29 };
     // is one color out of squares?
     if (!count.blue && count.green > 0) return "green";
     if (!count.green && count.blue > 0) return "blue";
@@ -186,20 +141,16 @@ class Slime extends Component {
   }
 
   render() {
-    const winner = this.isGameOver();
-    const win_announcement = winner ? <h2>{winner} is the winner!</h2> : "";
     return (
-      <div>
-        <Board
-          squares={this.state.squares}
-          active={this.state.active}
-          onClick={(i, j) => this.handleClick(i, j)}
-        />
-        <ColorCount count={this.countColors()} />
-        {win_announcement}
-      </div>
+      <Slime
+        squares={this.state.squares}
+        active={this.state.active}
+        onClick={(i, j) => this.handleClick(i, j)}
+        winner={this.getWinner()}
+        color_count={this.countColors(this.state.squares)}
+      />
     );
   }
 }
 
-export default Slime;
+export default SlimeContainer;

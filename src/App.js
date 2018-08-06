@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import "./App.css";
-import Slime from "./Slime.js";
+import Slime from "./SlimeContainer";
 
 class App extends Component {
   render() {
