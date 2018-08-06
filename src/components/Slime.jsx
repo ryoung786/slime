@@ -3,19 +3,22 @@ import Board from "./Board";
 import ColorCount from "./ColorCount";
 
 const WinAnnouncement = props => {
-  return props.winner ? <h2>{props.winner} is the winner!</h2> : "";
+  return props.winner ? <h2>{props.winner} is the winner!</h2> : null;
 };
 
 const Slime = props => {
+  const winner = props.game.getWinner();
+  const color_count = props.game.countColors();
+
   return (
     <React.Fragment>
       <Board
-        squares={props.squares}
+        squares={props.game.board}
         active={props.active}
-        onClick={(i, j) => props.onClick(i, j)}
+        onClick={props.onClick}
       />
-      <ColorCount count={props.color_count} />
-      <WinAnnouncement winner={props.winner} />
+      <ColorCount count={color_count} />
+      <WinAnnouncement winner={winner} />
     </React.Fragment>
   );
 };
