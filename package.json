@@ -13,7 +13,7 @@
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject",
-    "deploy": "yarn build && cp -r build ../ryoung786.github.io && pushd ../ryoung786.github.io && rm -r slime && mv build slime && git add slime/static && git ci -m \"slime deploy\" && git push && popd"
+    "deploy": "yarn build && cp -r build ../ryoung786.github.io && pushd ../ryoung786.github.io && rm -r slime && mv build slime && git add slime/static && git ci -a -m \"slime deploy\" && git push && popd"
   },
   "devDependencies": {
     "enzyme": "^3.3.0",
