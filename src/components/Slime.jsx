@@ -3,7 +3,9 @@ import Board from "./Board";
 import ColorCount from "./ColorCount";
 
 const WinAnnouncement = props => {
-  return props.winner ? <h2>{props.winner} is the winner!</h2> : null;
+  return props.winner ? (
+    <h2 className="winner">{props.winner} is the winner!</h2>
+  ) : null;
 };
 
 const Slime = props => {
