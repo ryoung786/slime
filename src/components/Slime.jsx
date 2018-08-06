@@ -1,6 +1,7 @@
 import React from "react";
 import Board from "./Board";
 import ColorCount from "./ColorCount";
+import "./Slime.css";
 
 const WinAnnouncement = props => {
   return props.winner ? (
